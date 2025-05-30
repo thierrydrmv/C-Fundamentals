@@ -1,5 +1,5 @@
-﻿using Classes;
-using System.Text;
+﻿using Classes.Accounting;
+using Classes.HR;
 
 //Console.WriteLine("Creating an employee!");
 //Console.WriteLine("--------------------\n");
@@ -26,10 +26,10 @@ Console.WriteLine(gamaAsJson);
 
 //gama.DisplayEmployeeDetails();
 
-//gama.PerformWork();
-//gama.PerformWork();
-//gama.PerformWork(25);
-//gama.PerformWork();
+gama.PerformWork();
+gama.PerformWork();
+gama.PerformWork(25);
+gama.PerformWork();
 
 //int minimalBonus = 10;
 //int receivedBonus = gama.CalculateBonus(minimalBonus);
@@ -38,6 +38,12 @@ Console.WriteLine(gamaAsJson);
 int minimalBonus = 200;
 int bonusTax = 0;
 int receivedBonus = gama.CalculateBonusAndBonusTax(minimalBonus, ref bonusTax);
+
+Employee.ChangeTaxRate(0.2);
+
+gama.ReceiveWage();
+
+gama.DisplayEmployeeDetails();
 
 //var example = gama.ExampleOut(out int bonusExample);
 //Console.WriteLine(example); // 100
@@ -67,3 +73,9 @@ WorkTask task;
 task.description = "Climbing hard routes";
 task.hours = 4;
 task.PerformWorkTask();
+
+//Customer customer = new();
+
+gama.CalculateWage();
+
+Account account = new("1234");
