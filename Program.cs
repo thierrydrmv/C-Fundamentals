@@ -1,5 +1,5 @@
-﻿using Classes;
-using System.Text;
+﻿using Classes.Accounting;
+using Classes.HR;
 
 //Console.WriteLine("Creating an employee!");
 //Console.WriteLine("--------------------\n");
@@ -26,10 +26,10 @@ using System.Text;
 
 //gama.DisplayEmployeeDetails();
 
-//gama.PerformWork();
-//gama.PerformWork();
-//gama.PerformWork(25);
-//gama.PerformWork();
+gama.PerformWork();
+gama.PerformWork();
+gama.PerformWork(25);
+gama.PerformWork();
 
 //int minimalBonus = 10;
 //int receivedBonus = gama.CalculateBonus(minimalBonus);
@@ -44,6 +44,12 @@ using System.Text;
 //gama.ReceiveWage();
 
 //gama.DisplayEmployeeDetails();
+
+Employee.ChangeTaxRate(0.2);
+
+gama.ReceiveWage();
+
+gama.DisplayEmployeeDetails();
 
 //var example = gama.ExampleOut(out int bonusExample);
 //Console.WriteLine(example); // 100
@@ -137,3 +143,13 @@ if (employeeIds.Contains(21))
 var employIdsArray = employeeIds.ToArray();
 
 employeeIds.Clear();
+WorkTask task;
+task.description = "Climbing hard routes";
+task.hours = 4;
+task.PerformWorkTask();
+
+//Customer customer = new();
+
+gama.CalculateWage();
+
+Account account = new("1234");

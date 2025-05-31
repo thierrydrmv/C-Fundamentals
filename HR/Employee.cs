@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using BethanysPieShopHRM.Logic;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Classes
+namespace Classes.HR
 {
     public class Employee
     {
@@ -21,7 +22,7 @@ namespace Classes
             this.email = email;
             this.birthDay = birthDay;
             this.hourlyRate = hourlyRate;
-            this.employeeType = empType;
+            employeeType = empType;
         }
 
         public string firstName { get; set; }
@@ -34,6 +35,12 @@ namespace Classes
         public EmployeeType employeeType;
         public DateTime birthDay { get; set; }
         const int minimalHoursWorkedUnit = 1;
+        private static double taxRate = 0.15;
+
+        public static void ChangeTaxRate(double newTaxRate)
+        {
+            taxRate = newTaxRate;
+        }
 
         public void PerformWork(int numberOfHours = minimalHoursWorkedUnit)
         {
@@ -70,6 +77,13 @@ namespace Classes
             return bonusExample;
         }
 
+        public double CalculateWage()
+        {
+            WageCalculations wageCalculations = new();
+            double calculatedValue = wageCalculations.ComplexWageCalculation(wage, taxRate, 3, 42);
+            return calculatedValue;
+        }
+
         public string ConvertToJson()
         {
             string json = JsonConvert.SerializeObject(this);
@@ -79,7 +93,8 @@ namespace Classes
         public double ReceiveWage(bool resetHours = true)
         {
             wage = numberOfHoursWorked * hourlyRate;
-            Console.WriteLine($"{firstName} {lastName} has received a wage of {wage} for {numberOfHoursWorked} hour(s) of work.");
+            double wageAfterTax = wage * taxRate;
+            Console.WriteLine($"{firstName} {lastName} has received a wage of {wage} for {numberOfHoursWorked} hour(s) of work. The wage after tax is {wageAfterTax}.");
 
             if (resetHours)
                 numberOfHoursWorked = 0;
@@ -88,7 +103,7 @@ namespace Classes
 
         public void DisplayEmployeeDetails()
         {
-            Console.WriteLine($"\nFirst name: \t{firstName}\nLast name: \t{lastName}\nEmail: \t\t{email}\nBirthday: \t{birthDay.ToShortDateString()}\n");
+            Console.WriteLine($"\nFirst name: \t{firstName}\nLast name: \t{lastName}\nEmail: \t\t{email}\nBirthday: \t{birthDay.ToShortDateString()}\nTax rate: \t{taxRate}");
         }
     }
 }
