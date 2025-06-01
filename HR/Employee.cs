@@ -8,34 +8,120 @@ using System.Threading.Tasks;
 
 namespace Classes.HR
 {
-    public class Employee
+    public class Employee : IEmployee
     {
-        public Employee(string firstName, string lastName, string email, DateTime birthDay) : this(firstName, lastName, email, birthDay, 0, EmployeeType.StoreManager)
+        public Employee(string firstName, string lastName, string email, DateTime birthDay) : this(firstName, lastName, email, birthDay, 0)
         {
             
         }
 
-        public Employee(string firstName, string lastName, string email, DateTime birthDay, double hourlyRate, EmployeeType empType)
+        public Employee(string firstName, string lastName, string email, DateTime birthDay, double hourlyRate)
         {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.email = email;
-            this.birthDay = birthDay;
-            this.hourlyRate = hourlyRate;
-            employeeType = empType;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            BirthDay = birthDay;
+            HourlyRate = hourlyRate;
         }
 
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string email { get; set; }
-        public int numberOfHoursWorked { get; set; }
-        public double wage { get; set; }
-        public double hourlyRate { get; set; }
+        public Employee(string firstName, string lastName, string email, DateTime birthDay, double hourlyRate, string street, string houseNumber, string zip, string city)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            BirthDay = birthDay;
+            HourlyRate = hourlyRate;
 
-        public EmployeeType employeeType;
-        public DateTime birthDay { get; set; }
-        const int minimalHoursWorkedUnit = 1;
+            Address = new Address(street, houseNumber, zip, city);
+        }
+
+        private string firstName { get; set; }
+        private string lastName { get; set; }
+        private string email { get; set; }
+        private int numberOfHoursWorked { get; set; }
+        private double wage { get; set; }
+        private double? hourlyRate { get; set; }
+
+        private DateTime birthDay { get; set; }
+        private const int minimalHoursWorkedUnit = 1;
         private static double taxRate = 0.15;
+        private Address address;
+        
+        public string FirstName
+        {
+            get {  return firstName; } 
+            set 
+            {
+                firstName = value;
+            }
+        }
+
+        public string LastName
+        {
+            get { return lastName; }
+            set
+            {
+                lastName = value;
+            }
+        }
+
+        public string Email
+        {
+            get { return email; }
+            set
+            {
+                email = value;
+            }
+        }
+
+        public int NumberOfHoursWorked
+        {
+            get { return numberOfHoursWorked; }
+            // protected allow acess from the inheritor
+            protected set
+            {
+                numberOfHoursWorked = value;
+            }
+        }
+
+        public double Wage
+        {
+            get { return wage; }
+            set
+            {
+                wage = value;
+            }
+        }
+
+        public double? HourlyRate
+        {
+            get { return hourlyRate; }
+            set
+            {
+                if (hourlyRate < 0)
+                    hourlyRate = 0;
+                else
+                    hourlyRate = value;
+            }
+        }
+
+        public DateTime BirthDay
+        {
+            get { return birthDay; }
+            set
+            {
+                birthDay = value;
+            }
+        }
+
+        public Address Address
+        {
+            get { return address; }
+            set
+            {
+                address = value;
+            }
+        }
 
         public static void ChangeTaxRate(double newTaxRate)
         {
@@ -44,13 +130,13 @@ namespace Classes.HR
 
         public void PerformWork(int numberOfHours = minimalHoursWorkedUnit)
         {
-            numberOfHoursWorked += numberOfHours;
-            Console.WriteLine($"{firstName} {lastName} has worked for {numberOfHoursWorked} hour(s)!");
+            NumberOfHoursWorked += numberOfHours;
+            Console.WriteLine($"{FirstName} {LastName} has worked for {numberOfHoursWorked} hour(s)!");
         }
 
         public int CalculateBonus(int bonus)
         {
-            if (numberOfHoursWorked > 10)
+            if (NumberOfHoursWorked > 10)
                 bonus *= 2;
 
             Console.WriteLine($"The employee got a bonus of {bonus}");
@@ -59,13 +145,8 @@ namespace Classes.HR
 
         public int CalculateBonusAndBonusTax(int bonus, ref int bonusTax)
         {
-            if (numberOfHoursWorked > 10)
+            if (NumberOfHoursWorked > 10)
                 bonus *= 2;
-            if (bonus >= 200 && employeeType != EmployeeType.Research)
-            {
-                bonusTax = bonus / 10;
-                bonus -= bonusTax;
-            }
 
             Console.WriteLine($"The employee got a bonus of {bonus} and the tax on is {bonusTax}");
             return bonus;
@@ -92,18 +173,28 @@ namespace Classes.HR
 
         public double ReceiveWage(bool resetHours = true)
         {
-            wage = numberOfHoursWorked * hourlyRate;
-            double wageAfterTax = wage * taxRate;
-            Console.WriteLine($"{firstName} {lastName} has received a wage of {wage} for {numberOfHoursWorked} hour(s) of work. The wage after tax is {wageAfterTax}.");
+            Wage = NumberOfHoursWorked * HourlyRate.Value;
+            double wageAfterTax = Wage * taxRate;
+            Console.WriteLine($"{firstName} {lastName} has received a wage of {Wage} for {NumberOfHoursWorked} hour(s) of work. The wage after tax is {wageAfterTax}.");
 
             if (resetHours)
-                numberOfHoursWorked = 0;
-            return wage;
+                NumberOfHoursWorked = 0;
+            return Wage;
         }
 
         public void DisplayEmployeeDetails()
         {
-            Console.WriteLine($"\nFirst name: \t{firstName}\nLast name: \t{lastName}\nEmail: \t\t{email}\nBirthday: \t{birthDay.ToShortDateString()}\nTax rate: \t{taxRate}");
+            Console.WriteLine($"\nFirst name: \t{firstName}\nLast name: \t{lastName}\nEmail: \t\t{email}\nBirthday: \t{BirthDay.ToShortDateString()}\nTax rate: \t{taxRate}");
+        }
+
+        public virtual void GiveBonus()
+        {
+            Console.WriteLine($"{FirstName} {LastName} received a generic bonus of 100!");
+        }
+
+        public void GiveCompliment()
+        {
+            Console.WriteLine($"Good morning, {firstName}");
         }
     }
 }
